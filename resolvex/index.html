@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResolveX | Enterprise Municipal Grievance Redressal & AI Bottleneck Intelligence Platform</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <!-- Leaflet CSS & JS for Interactive Geolocation Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js for SLA & Bottleneck Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- TensorFlow.js & MobileNet Open-Source Computer Vision Model -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@latest"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Top Government Navigation Header -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- National/Municipal Identity & Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-950/40">
+          <i data-feather="shield" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-black tracking-tight text-white">Resolve<span class="text-indigo-400">X</span></h1>
+            <span class="px-2 py-0.5 text-[9px] uppercase tracking-widest font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 rounded-full">Civic OS 2.0</span>
+          </div>
+          <p class="text-[10px] text-slate-400 hidden sm:block">Automated Grievance Triage, Department Routing & AI Bottleneck Audit</p>
+        </div>
+      </div>
+
+      <!-- Role Switcher & System Indicators -->
+      <div class="flex items-center gap-3">
+        <!-- Live Open-Source AI Engine Status -->
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-slate-300 text-[11px] font-medium">Open-Source AI: MobileNet v2 + NLP Agents Active</span>
+        </div>
+
+        <button id="btn-reset-data" class="px-3 py-1.5 text-xs text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 rounded-lg bg-slate-800/80 transition flex items-center gap-1.5" title="Reset Database to Default Seed">
+          <i data-feather="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span class="hidden md:inline">Reset Seed</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Navigation Tabs (Separate Role-Based Interfaces) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800 flex gap-2 sm:gap-6 overflow-x-auto text-xs sm:text-sm font-semibold">
+      
+      <!-- Tab 1: Citizen Interface -->
+      <button class="nav-tab-btn active py-3 px-3 border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-2 whitespace-nowrap transition" data-tab="tab-citizen">
+        <i data-feather="user" class="w-4 h-4"></i>
+        1. Citizen Portal
+      </button>
+
+      <!-- Tab 2: Live Tracking -->
+      <button class="nav-tab-btn py-3 px-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap transition" data-tab="tab-tracking">
+        <i data-feather="crosshair" class="w-4 h-4"></i>
+        2. Real-Time Tracking (11 Stages)
+      </button>
+
+      <!-- Tab 3: Department Officer Interface -->
+      <button class="nav-tab-btn py-3 px-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap transition" data-tab="tab-officer">
+        <i data-feather="briefcase" class="w-4 h-4"></i>
+        3. Department Officer Dashboard
+      </button>
+
+      <!-- Tab 4: Administrator & AI Bottleneck Analytics -->
+      <button class="nav-tab-btn py-3 px-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap transition" data-tab="tab-admin">
+        <i data-feather="activity" class="w-4 h-4"></i>
+        4. Central Admin & AI Bottleneck Analytics
+      </button>
+
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- ========================================================================= -->
+    <!-- INTERFACE 1: CITIZEN PORTAL (Registration, Verification, My Complaints)   -->
+    <!-- ========================================================================= -->
+    <section id="tab-citizen" class="tab-pane space-y-6">
+      
+      <!-- Welcome Hero Banner -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-800 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-400/30 mb-2">
+              <i data-feather="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i> Citizen Grievance Portal
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white">Public Grievance Registration & AI Triage</h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Submit civic complaints with photographs and verified GPS location. Our AI Agent evaluates multi-factor safety risks, assigns one of 5 severity levels, identifies the responsible department, and verifies the decision with you before forwarding.
+            </p>
+          </div>
+
+          <!-- Quick Navigation Actions -->
+          <div class="flex flex-wrap gap-2.5 shrink-0">
+            <a href="#section-registration" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm transition shadow-lg shadow-indigo-950/40 flex items-center gap-2">
+              <i data-feather="plus-circle" class="w-4 h-4"></i> Register Complaint
+            </a>
+            <a href="#section-my-complaints" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition flex items-center gap-2">
+              <i data-feather="list" class="w-4 h-4"></i> My Complaints (<span id="citizen-badge-count">6</span>)
+            </a>
+          </div>
+        </div>
+
+        <!-- 1-Click Preset Scenarios (Preloaded for Hackathon Demos) -->
+        <div class="mt-6 pt-5 border-t border-slate-800/80">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5 flex items-center gap-1.5">
+            <i data-feather="zap" class="w-3.5 h-3.5 text-amber-400"></i> 1-Click Demo Scenarios (Auto-Fills Title, Description, Multiple Photos, Ward & Location):
+          </span>
+          <div id="presets-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+            <!-- Populated from data.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Registration Form Card -->
+      <div id="section-registration" class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Module A</span>
+            <h3 class="text-xl font-bold text-slate-900 mt-0.5">Complaint Registration Form</h3>
+            <p class="text-xs text-slate-500">All fields are analyzed by our open-source AI agent</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+            AI-Assisted Intake
+          </span>
+        </div>
+
+        <form id="citizen-intake-form" onsubmit="return false;" class="space-y-6">
+          
+          <!-- Title -->
+          <div class="space-y-1.5">
+            <label for="complaint-title" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              1. Complaint Title <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="complaint-title" 
+              placeholder="E.g., Snapped High-Tension Electrical Cable Sparking Over Footpath" 
+              class="w-full px-4 py-3 text-xs sm:text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium text-slate-800"
+              required 
+            />
+          </div>
+
+          <!-- Problem Description -->
+          <div class="space-y-1.5">
+            <label for="complaint-text" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              2. Describe the Problem in Natural Language <span class="text-red-500">*</span>
+            </label>
+            <textarea 
+              id="complaint-text" 
+              rows="4" 
+              placeholder="Describe what happened, any visible hazard, smells, or risk to citizens (e.g. Heavy storm snapped an overhead high-tension electrical wire hanging dangerously low over the sidewalk. Live wire is sparking near school gate #2)." 
+              class="w-full p-4 text-xs sm:text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed text-slate-800"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Multiple Photographs Upload -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                3. Upload Multiple Photographs of the Problem <span class="text-red-500">*</span>
+              </label>
+              <span id="photo-count-badge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                0 Photos Selected
+              </span>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div id="multi-upload-dropzone" class="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-50/70 hover:bg-indigo-50/40 relative">
+              <input type="file" id="multi-file-input" class="hidden" accept="image/*" multiple />
+              
+              <div id="multi-upload-placeholder" class="py-4 space-y-2">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center shadow-xs">
+                  <i data-feather="camera" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-xs sm:text-sm font-bold text-slate-800">
+                    Click to upload multiple photographs or drag & drop
+                  </p>
+                  <p class="text-[11px] text-slate-400">
+                    Images are analyzed locally using Open-Source Computer Vision (MobileNet v2 CNN)
+                  </p>
+                </div>
+              </div>
+
+              <!-- Gallery Grid -->
+              <div id="multi-gallery-container" class="hidden pt-2">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200/80 mb-3 text-left">
+                  <span class="text-xs font-bold text-slate-700">Uploaded Photographic Evidence:</span>
+                  <button type="button" id="btn-add-more-photos" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
+                    <i data-feather="plus" class="w-3 h-3"></i> Add More
+                  </button>
+                </div>
+                <div id="photo-thumbnails-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location & Administrative Jurisdiction -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
+              <div>
+                <label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-feather="map-pin" class="w-4 h-4 text-indigo-600"></i>
+                  4. Location & Administrative Jurisdiction
+                </label>
+                <p class="text-[11px] text-slate-500 mt-0.5">Capture via GPS sensor or manually adjust pin on map</p>
+              </div>
+
+              <button 
+                type="button" 
+                id="btn-detect-gps" 
+                class="px-3.5 py-2 bg-white hover:bg-indigo-50 border border-slate-300 hover:border-indigo-400 text-indigo-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+              >
+                <i data-feather="navigation" class="w-3.5 h-3.5 text-indigo-600"></i>
+                Capture GPS with Permission
+              </button>
+            </div>
+
+            <div id="gps-status-banner" class="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between gap-3 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="gps-status-text" class="text-slate-700 font-medium">GPS Ready: 12.9716° N, 77.5946° E</span>
+              </div>
+              <span id="gps-accuracy-badge" class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                ±8m Verified
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label for="select-admin-area" class="block text-xs font-bold text-slate-700 uppercase">
+                  Select Area / Ward / Village <span class="text-red-500">*</span>
+                </label>
+                <select id="select-admin-area" class="w-full px-3 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-xl bg-white font-medium text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></select>
+              </div>
+
+              <div class="space-y-1">
+                <label for="input-locality" class="block text-xs font-bold text-slate-700 uppercase">
+                  Locality / Street / Landmark <span class="text-red-500">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="input-locality" 
+                  value="Hebbal Junction" 
+                  class="w-full px-3 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-xl bg-white text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label for="location-input" class="block text-xs font-semibold text-slate-600">GPS Coordinates / Street Address:</label>
+              <input type="text" id="location-input" value="12.9825° N, 77.5960° E (Ward 102 - North Tech Corridor)" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white text-slate-700 font-mono" />
+            </div>
+
+            <div id="incident-map" class="h-44 w-full rounded-xl border border-slate-200 z-10 shadow-xs"></div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-2">
+            <button 
+              id="btn-analyze-complaint" 
+              type="button" 
+              class="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-black text-sm sm:text-base rounded-2xl shadow-lg shadow-indigo-200 flex items-center justify-center gap-2.5 transition active:scale-[0.99]"
+            >
+              <i data-feather="cpu" class="w-5 h-5"></i>
+              Analyze Severity & Route with AI Agent
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Loading Reasoning Indicator -->
+        <div id="ai-triage-loading" class="hidden bg-white rounded-2xl border border-indigo-200 p-6 shadow-sm">
+          <div id="reasoning-steps-list" class="space-y-2"></div>
+        </div>
+
+        <!-- AI Analysis & Human Verification Card -->
+        <div id="ai-result-section" class="hidden">
+          <div id="ai-analysis-card"></div>
+        </div>
+
+      </div>
+
+      <!-- Citizen Complaints History Feed -->
+      <div id="section-my-complaints" class="space-y-4 pt-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-xl font-black text-slate-900 flex items-center gap-2">
+              <i data-feather="inbox" class="w-5 h-5 text-indigo-600"></i>
+              My Registered Complaints
+            </h3>
+            <p class="text-xs text-slate-500">Live progress tracking, officer remarks, and reopen options</p>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs text-xs">
+            <button class="citizen-filter-btn active px-3 py-1.5 rounded-lg font-semibold bg-indigo-50 text-indigo-700" data-filter="All">All</button>
+            <button class="citizen-filter-btn px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900" data-filter="In-Progress">In Progress</button>
+            <button class="citizen-filter-btn px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900" data-filter="Resolved">Resolved</button>
+          </div>
+        </div>
+
+        <div id="citizen-complaints-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- INTERFACE 2: REAL-TIME TRACKING (11 Lifecycle Stages & Reopen Action)      -->
+    <!-- ========================================================================= -->
+    <section id="tab-tracking" class="tab-pane hidden space-y-6">
+      
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div>
+            <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Audit & Tracking</span>
+            <h3 class="text-xl font-black text-slate-900 mt-0.5">Real-Time Complaint Lifecycle Tracker</h3>
+            <p class="text-xs text-slate-500">Search any complaint to inspect movement between departments, officers, and stage timestamps</p>
+          </div>
+          <span class="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+            11-Stage Verification Flow
+          </span>
+        </div>
+
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <i data-feather="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
+            <input type="text" id="track-search-input" placeholder="Enter Complaint ID (e.g. CIT-2026-1001)" class="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono" />
+          </div>
+          <button id="btn-track-search" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-xl transition shadow-xs">
+            Search
+          </button>
+        </div>
+
+        <!-- Quick Access Pills -->
+        <div class="pt-1">
+          <span class="text-xs text-slate-400 block mb-2 font-medium">Quick Access Recent Complaints:</span>
+          <div id="recent-tickets-pills" class="flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+
+      <!-- Tracking Details Result (Timeline, Officer Remarks, Resolution Proof, Reopen Form) -->
+      <div id="tracking-result" class="space-y-4"></div>
+
+      <!-- Not Found State -->
+      <div id="tracking-not-found" class="hidden bg-white rounded-3xl border border-slate-200 p-12 text-center text-slate-400 text-sm">
+        <i data-feather="alert-circle" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+        Complaint ID not found in municipal database. Please verify the ID format (CIT-2026-XXXX).
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- INTERFACE 3: DEPARTMENT OFFICER DASHBOARD (Officer Actions & Resolution)  -->
+    <!-- ========================================================================= -->
+    <section id="tab-officer" class="tab-pane hidden space-y-6">
+      
+      <!-- Officer Header & Department Selector -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Department Officer Console</span>
+          </div>
+          <h3 id="officer-portal-title" class="text-xl font-black text-slate-900 mt-1">Road and Infrastructure Department</h3>
+          <p id="officer-portal-name" class="text-xs text-slate-500">Authorized Officer: <strong>Er. Rajesh Sharma (Superintending Engineer)</strong></p>
+        </div>
+
+        <!-- Department Switcher (Simulates login as officer of any department) -->
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="text-xs font-bold text-slate-600">Switch Department:</label>
+          <select id="officer-dept-select" class="text-xs rounded-xl border-slate-300 p-2.5 bg-slate-50 font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <!-- Populated from data.js -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Officer Metrics Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Assigned Queue</span>
+          <span id="officer-metric-assigned" class="text-xl font-black text-slate-900 mt-1 block">0</span>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[11px] font-bold text-amber-500 uppercase tracking-wider block">In Investigation</span>
+          <span id="officer-metric-investigation" class="text-xl font-black text-amber-600 mt-1 block">0</span>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[11px] font-bold text-red-500 uppercase tracking-wider block">Overdue / SLA Breach</span>
+          <span id="officer-metric-overdue" class="text-xl font-black text-red-600 mt-1 block">0</span>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[11px] font-bold text-emerald-500 uppercase tracking-wider block">Resolved This Month</span>
+          <span id="officer-metric-resolved" class="text-xl font-black text-emerald-600 mt-1 block">0</span>
+        </div>
+      </div>
+
+      <!-- Officer Complaints Queue Cards List -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-bold text-slate-800">Active Department Complaints</h4>
+          <span class="text-xs text-slate-400 font-medium">Click card to investigate, reassign, or submit resolution proof</span>
+        </div>
+        <div id="officer-complaints-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- INTERFACE 4: ADMINISTRATOR DASHBOARD & AI BOTTLENECK ANALYTICS            -->
+    <!-- ========================================================================= -->
+    <section id="tab-admin" class="tab-pane hidden space-y-6">
+      
+      <!-- Executive Overview Banner -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Municipal Central Administration</span>
+          <h3 class="text-2xl font-black text-slate-900 mt-0.5">Civic Operations & AI Bottleneck Intelligence</h3>
+          <p class="text-xs text-slate-500">Citywide performance monitoring, stage delay waterfall analysis, and operational insights</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-export-report" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition shadow-xs flex items-center gap-1.5">
+            <i data-feather="download" class="w-3.5 h-3.5"></i> Export Audit Log
+          </button>
+        </div>
+      </div>
+
+      <!-- Executive KPIs -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Complaints</span>
+          <span id="admin-total-complaints" class="text-2xl font-black text-slate-900 mt-1 block">0</span>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider block">Pending Resolution</span>
+          <span id="admin-pending-complaints" class="text-2xl font-black text-amber-600 mt-1 block">0</span>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[10px] font-bold text-red-500 uppercase tracking-wider block">Critical Severity</span>
+          <span id="admin-critical-complaints" class="text-2xl font-black text-red-600 mt-1 block">0</span>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+          <span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider block">SLA Overdue</span>
+          <span id="admin-overdue-complaints" class="text-2xl font-black text-rose-600 mt-1 block">0</span>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs col-span-2 sm:col-span-1">
+          <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider block">Resolved Count</span>
+          <span id="admin-resolved-complaints" class="text-2xl font-black text-emerald-600 mt-1 block">0</span>
+        </div>
+      </div>
+
+      <!-- AI-GENERATED BOTTLENECK DIAGNOSTIC INSIGHTS (CORE FEATURE) -->
+      <div class="p-6 rounded-3xl bg-gradient-to-r from-red-500/10 via-amber-500/10 to-transparent border border-red-200 shadow-xs space-y-3">
+        <div class="flex items-center gap-2 text-red-900 font-bold text-xs uppercase tracking-wider">
+          <i data-feather="alert-triangle" class="w-4 h-4 text-red-600"></i>
+          AI Bottleneck & Delay Detection Engine (Continuous Audit)
+        </div>
+        <div id="ai-bottleneck-insights-container" class="space-y-2">
+          <!-- Populated by app.js with stage-by-stage insights -->
+        </div>
+      </div>
+
+      <!-- Analytics Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Chart 1: Stage Delays Waterfall (Submission to Resolution) -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-2xs space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-bold text-slate-800">Process Bottleneck: Average Hours Spent at Each Stage</h4>
+              <p class="text-[11px] text-slate-400">Identifies the exact phase causing municipal delay</p>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+              Stage Waterfall
+            </span>
+          </div>
+          <div class="h-64">
+            <canvas id="chart-stage-delays"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Priority Distribution (Critical, Very High, High, Medium, Low) -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-2xs space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-bold text-slate-800">5-Level Severity & Priority Distribution</h4>
+              <p class="text-[11px] text-slate-400">Public safety risk stratification</p>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas id="chart-priority-dist"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Department Performance Comparison -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-2xs space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-bold text-slate-800">Department Resolution Time vs SLA Target (Hours)</h4>
+              <p class="text-[11px] text-slate-400">Green = Within SLA, Red = Lagging</p>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas id="chart-dept-perf"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Ward Complaint Density & Recurring Hotspots -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-2xs space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-bold text-slate-800">Ward Grievance Density (Recurring Problems)</h4>
+              <p class="text-[11px] text-slate-400">Geographic infrastructure hotspots</p>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas id="chart-ward-density"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Citywide Geographical Complaint Map (Interactive Leaflet Pins) -->
+      <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-2xs space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="text-sm font-bold text-slate-800">Citywide Geographical Complaint Map</h4>
+            <p class="text-[11px] text-slate-400">Live pinpoints color-coded by priority level across municipal wards</p>
+          </div>
+          <div class="flex items-center gap-2 text-[10px] font-bold">
+            <span class="inline-flex items-center gap-1 text-red-600"><span class="w-2 h-2 rounded-full bg-red-500"></span> Critical</span>
+            <span class="inline-flex items-center gap-1 text-orange-600"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Very High</span>
+            <span class="inline-flex items-center gap-1 text-amber-600"><span class="w-2 h-2 rounded-full bg-amber-500"></span> High</span>
+            <span class="inline-flex items-center gap-1 text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Medium/Low</span>
+          </div>
+        </div>
+        <div id="admin-citywide-map" class="h-72 w-full rounded-2xl border border-slate-200 z-10 shadow-xs"></div>
+      </div>
+
+      <!-- Department Performance Comparison Table -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-2xs space-y-4">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-bold text-slate-800">Official Municipal Department Performance Table</h4>
+          <span class="text-xs text-slate-400 font-medium">Measurable records and timestamps</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-700">
+            <thead class="bg-slate-50 text-slate-500 uppercase font-bold text-[10px] border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-3">Department</th>
+                <th class="py-3 px-3">Received</th>
+                <th class="py-3 px-3">Resolved</th>
+                <th class="py-3 px-3">Pending</th>
+                <th class="py-3 px-3">Overdue</th>
+                <th class="py-3 px-3">Avg Resolution</th>
+                <th class="py-3 px-3">Target SLA</th>
+                <th class="py-3 px-3">SLA Compliance</th>
+              </tr>
+            </thead>
+            <tbody id="admin-dept-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Modal: Citizen Official Acknowledgement Receipt -->
+  <div id="acknowledgement-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+      <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
+        <i data-feather="check" class="w-7 h-7 stroke-[3]"></i>
+      </div>
+
+      <div class="text-center space-y-1">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Official Acknowledgement Receipt</span>
+        <h3 class="text-2xl font-black text-slate-900">Complaint Forwarded to Department</h3>
+        <p class="text-xs text-slate-500">Your grievance has been assigned to field officers and movement history is logged</p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5 text-xs">
+        <div class="flex justify-between items-center pb-2 border-b border-slate-200">
+          <span class="text-slate-500 font-medium">Complaint ID:</span>
+          <span id="receipt-id" class="font-mono text-base font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200">CIT-2026-0000</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Assigned Department:</span>
+          <span id="receipt-dept" class="font-bold text-slate-900">Road and Infrastructure Department</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Assigned Officer / Team:</span>
+          <span id="receipt-officer" class="font-semibold text-slate-800">Er. Rajesh Sharma</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-slate-500">Assessed Priority:</span>
+          <span id="receipt-priority" class="font-bold px-2 py-0.5 rounded text-[11px] bg-red-100 text-red-700">VERY HIGH</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Expected Resolution Deadline:</span>
+          <span id="receipt-deadline" class="font-bold text-indigo-600">Within 36 Hours</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <button id="receipt-btn-track" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-xl transition shadow-md shadow-indigo-100 flex items-center justify-center gap-2">
+          <i data-feather="crosshair" class="w-4 h-4"></i> Track Complaint Status
+        </button>
+        <button id="receipt-btn-close" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm rounded-xl transition">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Officer Status Update & Proof Upload -->
+  <div id="officer-action-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <span class="text-[10px] font-bold text-indigo-600 uppercase">Officer Action Console</span>
+          <h3 id="officer-modal-id" class="text-base font-bold text-slate-900 font-mono">CIT-2026-1001</h3>
+        </div>
+        <button id="btn-close-officer-modal" class="text-slate-400 hover:text-slate-600">
+          <i data-feather="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Update Progress Stage:</label>
+          <select id="modal-officer-status" class="w-full p-2.5 rounded-xl border border-slate-300 font-medium bg-white text-slate-800">
+            <option value="Under Investigation">Under Investigation</option>
+            <option value="Work in Progress">Work in Progress</option>
+            <option value="Resolution Submitted">Resolution Submitted (Awaiting Citizen Verification)</option>
+            <option value="Resolved">Resolved (Complete)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Officer Investigation / Work Remarks:</label>
+          <textarea id="modal-officer-remarks" rows="3" placeholder="Describe actions taken, machinery deployed, or resolution notes..." class="w-full p-2.5 rounded-xl border border-slate-300 text-slate-800"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Upload Completion / Proof Photograph:</label>
+          <input type="file" id="modal-officer-proof" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end gap-2">
+        <button id="btn-save-officer-action" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition shadow-xs">
+          Submit Progress Update
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Citizen Reopen Complaint -->
+  <div id="reopen-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <span class="text-[10px] font-bold text-red-600 uppercase">Citizen Reopen Action</span>
+          <h3 id="reopen-modal-id" class="text-base font-bold text-slate-900 font-mono">CIT-2026-1001</h3>
+        </div>
+        <button id="btn-close-reopen-modal" class="text-slate-400 hover:text-slate-600">
+          <i data-feather="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed">
+        If the civic issue has not been satisfactorily resolved or has recurred, you can reopen this ticket. The priority will be elevated, and department officers will be notified immediately.
+      </p>
+
+      <div class="space-y-2 text-xs">
+        <label class="block font-bold text-slate-700">Why are you reopening this complaint? <span class="text-red-500">*</span></label>
+        <textarea id="reopen-remarks" rows="3" placeholder="E.g. Asphalt poured has already cracked after rain; potholes remain unlevelled..." class="w-full p-2.5 rounded-xl border border-slate-300 text-slate-800" required></textarea>
+      </div>
+
+      <div class="pt-2 flex justify-end gap-2">
+        <button id="btn-confirm-reopen" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition shadow-xs">
+          Confirm Reopen Complaint
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Data & Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

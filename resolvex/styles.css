@@ -1,0 +1,54 @@
+/* ResolveX Custom Styles & Animations */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Leaflet Map UI Adjustments */
+.leaflet-container {
+  font-family: inherit;
+  border-radius: 0.75rem;
+}
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+/* Animations */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2.5s infinite ease-in-out;
+}
+
+/* Preset Cards hover effect */
+.preset-pill {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.preset-pill:hover {
+  transform: translateY(-2px);
+}
+
+/* Shadows */
+.shadow-2xs {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
